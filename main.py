@@ -27,10 +27,11 @@ app = FastAPI(
 )
 
 
-@app.get('/clientes/', tags=["Clientes"])
-async def clientes():
-    content = [cliente.to_dict() for cliente in db.Clientes.lista]
-    return JSONResponse(content=content)
+@app.get('/', tags=["Inicio"])
+async def Inicio():
+    return {"mensaje": "API del gestor de clientes funcionando correctamente",
+        "documentacion": "/docs"}
+        
 
 @app.get('/clientes/buscar/{dni}', tags=["Clientes"])
 async def clientes_buscar(dni: str):
