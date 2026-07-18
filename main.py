@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from typing import Annotated
 from pydantic import BaseModel, StringConstraints, field_validator
@@ -23,7 +23,7 @@ class ModeloCrearCliente(ModeloCliente):
 
 app = FastAPI(
     title="API del gestor de clientes",
-    description="Ofrece diferentes funcione para gestionar los clientes."
+    description="Ofrece diferentes funciones para gestionar los clientes."
 )
 
 
@@ -32,6 +32,10 @@ async def Inicio():
     return {"mensaje": "API del gestor de clientes funcionando correctamente",
         "documentacion": "/docs"}
         
+@app.get("/clientes/", tags=["Clientes"])
+async def clientes():
+    content = [cliente.to_dict() for cliente in db.Clientes.lista]
+    return JSONResponse(content=content)
 
 @app.get('/clientes/buscar/{dni}', tags=["Clientes"])
 async def clientes_buscar(dni: str):
@@ -47,8 +51,6 @@ async def clientes_crear(datos: ModeloCrearCliente):
     if cliente:
         return JSONResponse(content=cliente.to_dict())
     raise HTTPException(status_code=404, detail="Cliente no creado")
-
-    return
 
 
 @app.put('/clientes/actualizar', tags=["Clientes"])
